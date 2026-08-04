@@ -97,3 +97,11 @@ with st.spinner("Building RAG Chain"):
         | llm
         | StrOutputParser()
     )
+
+# ===============GET USER INPUT================
+user_question = st.text_area("Ask Question: ")
+if user_question:
+    if st.button("Get Answer"):
+        answer = rag_chain.invoke(user_question)
+        st.markdown(answer)
+
