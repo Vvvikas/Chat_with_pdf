@@ -21,3 +21,5 @@ st.sidebar.title("SET API CONFIG")
 st.title("RAG Based chat with PDF 📚")
 GOOGLE_API_KEY = st.sidebar_text_input("GOOGLE_API_KEY",type = "password")
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+
+#============STEP 3: LOAD PDF===============#
