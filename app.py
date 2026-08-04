@@ -26,4 +26,5 @@ os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 if uploaded_file:
   with st.spinner("Reading Pdf file")"
     data = uploaded_file.read()
+    st.sidebar.pdf(data)
 
