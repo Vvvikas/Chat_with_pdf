@@ -22,14 +22,11 @@ os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 uploaded_file = st.sidebar.file_uploader("Upload PDF File", type = ["pdf"])
 
 #================STEP 4: LOAD RESOURCES=================
-@st.cache_resource
+@st.cache_resource  # cache_resource for embeddings because it's heavy to load
 def load_embedding():
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    return embeddings
+    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
-embeddings = load_embedding()
-
-@st.cache_data
+@st.cache_data  # data is fine for documents/chunks
 def load_documents(file):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(file.read())
@@ -44,14 +41,14 @@ def get_split_chunks(documents):
     chunks = splitter.split_documents(documents)
     return chunks
 
-@st.cache_resource
-def create_vector_db(chunks, embeddings):
-    vectorstore = FAISS.from_documents(chunks, embeddings)
+@st.cache_resource  # vectorstore is also a resource
+def create_vector_db(_chunks, _embeddings):  # note the _ to tell streamlit not to hash these
+    vectorstore = FAISS.from_documents(_chunks, _embeddings)
     return vectorstore
 
 @st.cache_resource
-def create_retriever(vectorstore, k_value):
-    retriever = vectorstore.as_retriever(search_kwargs={"k": k_value})
+def create_retriever(_vectorstore, k_value):
+    retriever = _vectorstore.as_retriever(search_kwargs={"k": k_value})
     return retriever
 
 if uploaded_file:
@@ -60,11 +57,13 @@ if uploaded_file:
     chunks = get_split_chunks(documents)
     
     k_slider = st.sidebar.slider("Select Top K-Value", min_value = 1, max_value = 10, value=3)
-    vectorstore = create_vector_db(chunks, embeddings)
+    
+    embeddings = load_embedding()
+    vectorstore = create_vector_db(chunks, embeddings)  # passing with _ in func def
     retriever = create_retriever(vectorstore, k_slider)
 
     #================STEP 6: LCEL RAG CHAIN=================
-    llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash")  # kept as you requested
+    llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash")
     prompt = ChatPromptTemplate.from_template("""
     Answer the question using ONLY the context below.
     If the answer isn't in the context, say "I don't know based on the document."
