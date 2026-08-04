@@ -22,9 +22,12 @@ st.title("RAG Based chat with PDF 📚")
 GOOGLE_API_KEY = st.sidebar_text_input("GOOGLE_API_KEY",type = "password")
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
 
-#============STEP 3: LOAD PDF=================#
+# =============STEP 3: LOAD PDF================#
+uploaded_file = st.sidebar.file_uploaded("Upload PDF File", type = ["pdf"])
+
 if uploaded_file:
-  with st.spinner("Reading Pdf file")"
-    data = uploaded_file.read()
+    with st.spinner("Reading PDF File"):
+        data = uploaded_file.read()
     st.sidebar.pdf(data)
 
+#============STEP 4: ===============#
