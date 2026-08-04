@@ -30,4 +30,18 @@ if uploaded_file:
         data = uploaded_file.read()
     st.sidebar.pdf(data)
 
-#============STEP 4: ===============#
+# =================STEP 4: LOAD RESOURCES=================
+@st.cache_data
+def load_documents():
+    loader = PyPDFLoader(uploaded_file)
+    documents = loader.load()
+    return documents
+
+# st.cache_data: to load data only one time
+# st.cache_resource : to load resource only one time
+
+@st.cache_resource
+def load_embedding():
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    return embeddings|
+
