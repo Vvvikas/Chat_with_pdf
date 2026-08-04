@@ -43,5 +43,6 @@ def load_documents():
 @st.cache_resource
 def load_embedding():
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-    return embeddings|
+    return embeddings
+
 
