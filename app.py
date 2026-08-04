@@ -73,3 +73,27 @@ def create_retriever(vectorstore, k_value):
 vectorstore = create_vector_db(chunks,embeddings)
 k_slider = st.sidebar.slider("Select Top K-Value",min_value = 1, max_value = 10)
 retriever = create_retriever(vectorstore, k_slider)
+
+#================STEP 6: LCEL RAG CHAIN=================
+llm = ChatGoogleGenerativeAI(model="gemini-3.5-flash")
+prompt = ChatPromptTemplate.from_template("""
+Answer the question using ONLY the context below.
+If the answer isn't in the context, say "I don't know based on the document."
+
+Context:
+{context}
+
+Question: {question}
+""")
+
+def format_docs(docs):
+    # Join chunks of retrieved docs
+    return "\n\n".join(doc.page_content for doc in docs)
+
+with st.spinner("Building RAG Chain"):
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
