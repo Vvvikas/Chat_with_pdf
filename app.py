@@ -45,4 +45,10 @@ def load_embedding():
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     return embeddings
 
-
+@st.cache_data
+def get_splitted_chunks():
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200)
+    chunks = splitter.split_documents(documents)
+    return chunks
