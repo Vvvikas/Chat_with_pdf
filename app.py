@@ -18,6 +18,6 @@ st.set_page_config(page_title = "Chat-with-pdf".
                    layout = "wide")
 
 st.sidebar.title("SET API CONFIG")
-st.title("RAG Based chat with PDF ")
+st.title("RAG Based chat with PDF 📚")
 GOOGLE_API_KEY = st.sidebar_text_input("GOOGLE_API_KEY",type = "password")
 os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
