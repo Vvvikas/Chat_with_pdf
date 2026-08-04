@@ -52,3 +52,23 @@ def get_splitted_chunks():
         chunk_overlap=200)
     chunks = splitter.split_documents(documents)
     return chunks
+
+#================STEP 5: GET and LOAD DOCS=================
+documents = load_documents()
+embeddings = load_embedding()
+chunks = get_splitted_chunks()
+
+@st.cache_data
+def create_vector_db(chunks,embeddings):
+    # To Build Vector DB
+    vectorstore = FAISS.from_documents(chunks, embeddings)
+    vectorstore.save_local("faiss_index")
+    return vectorstore
+
+@st.cache_data
+def create_retriever(vectorstore, k_value):
+    retriever = vectorstore.as_retriever(search_kwargs={"k": k_value})
+    return retriever
+
+vectorstore = create_vector_db(chunks,embeddings)
+retriever = create_retriever(vectorstore, 3)
