@@ -71,4 +71,5 @@ def create_retriever(vectorstore, k_value):
     return retriever
 
 vectorstore = create_vector_db(chunks,embeddings)
-retriever = create_retriever(vectorstore, 3)
+k_slider = st.sidebar.slider("Select Top K-Value",min_value = 1, max_value = 10)
+retriever = create_retriever(vectorstore, k_slider)
