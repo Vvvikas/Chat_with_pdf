@@ -13,4 +13,4 @@ import numpy
 import time
 from PIL import Image
 
-#============STEP 2: ===============#
+#============STEP 2: API KEY==================#
